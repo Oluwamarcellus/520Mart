@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "<520Mart>",
-    "slug": "<520mart>",
+    "slug": "<520Mart>",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "",
-    "scheme": "<520mart>",
+    "scheme": "<520Mart>",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -23,7 +23,8 @@
     },
     "web": {
       "output": "static",
-      "favicon": ""
+      "favicon": "",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
