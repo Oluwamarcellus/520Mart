@@ -23,4 +23,4 @@ export const flyers = [
   require("../assets/flyers/flyer4.jpg")
 ]
 
-export const login = require("../assets/login1.jpg")
+export const login = require("../assets/login2.jpg")
