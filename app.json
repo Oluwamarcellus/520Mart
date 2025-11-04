@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "<520Mart>",
-    "slug": "<520Mart>",
+    "name": "520Mart",
+    "slug": "520Mart",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "",
-    "scheme": "<520Mart>",
+    "scheme": "520Mart",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

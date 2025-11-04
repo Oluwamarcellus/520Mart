@@ -1,22 +1,33 @@
-import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+import {
+  Image,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import { login } from "../constants/images";
+import { getStartedScreenImage } from "../constants/images";
 
 const GetStarted = () => {
+  const router = useRouter();
+
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
         paddingTop: wp("10%"),
-        alignItems: "center",
       }}
+      contentContainerStyle={{ alignItems: "center" }}
+      bounces={false}
     >
       <StatusBar value="auto" />
       <Image
-        source={login}
+        source={getStartedScreenImage}
         style={{
           width: wp("90%"),
           height: hp("40%"),
@@ -37,18 +48,19 @@ const GetStarted = () => {
           }}
           className="text-black text-center font-semibold "
         >
-          520 Marketplace
+          520 MARKETPLACE
         </Text>
         <Text
           style={{
-            fontSize: wp("4.5%"),
+            fontSize: wp("4%"),
           }}
-          className="text-center leading-5 pb-6 text-gray-500/80"
+          className=" leading-5 pb-6 text-gray-500/80"
         >
           Your go-to platform to buy, sell, or swap new and pre-owned items
           effortlessly
         </Text>
         <TouchableOpacity
+          onPress={() => router.push("sign-in")}
           activeOpacity={0.7}
           style={{
             padding: hp("1.3%"),
@@ -59,6 +71,7 @@ const GetStarted = () => {
           <Text className="text-white text-center text-lg">Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => router.push("sign-up")}
           activeOpacity={0.7}
           style={{
             padding: hp("1.3%"),
@@ -87,7 +100,7 @@ const GetStarted = () => {
           <Text className="text-black text-lg">Continue with google</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

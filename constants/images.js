@@ -23,4 +23,5 @@ export const flyers = [
   require("../assets/flyers/flyer4.jpg")
 ]
 
-export const login = require("../assets/login2.jpg")
+export const getStartedScreenImage = require("../assets/getStarted.jpg")
+export const authScreenImage = require("../assets/auth.jpg")
