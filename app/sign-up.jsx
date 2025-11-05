@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -15,16 +15,44 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+
+import { ActivityIndicator } from "react-native";
 import { authScreenImage } from "../constants/images";
+import useAuthStore from "../hooks/firebaseAuthentication";
+import { isValidEmail, isValidPassword } from "../utils/helperFunctions";
 
 const SignUp = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
+  const [error, setError] = useState(null);
+
   const router = useRouter();
+  const { signingUp, signUp } = useAuthStore();
 
   const emailRef = useRef();
   const psswdRef = useRef();
   const vPsswdRef = useRef();
 
-  const handleSignUp = () => {};
+  const handleSignUp = async () => {
+    setError(null);
+
+    if (!password || !verifyPassword || !fullName.trim() || !email.trim()) {
+      setError("All fields are required.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    const passwordError = isValidPassword(password, verifyPassword);
+    if (passwordError) return setError(passwordError);
+
+    const res = await signUp(fullName.trim(), email.trim(), password);
+    if (res) setError(res);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -39,6 +67,7 @@ const SignUp = () => {
           backgroundColor: "#60a5fa",
         }}
         contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}
+        bounces={false}
       >
         <StatusBar value="auto" />
         <Image
@@ -86,6 +115,8 @@ const SignUp = () => {
               returnKeyType={emailRef ? "next" : "return"}
               onSubmitEditing={() => emailRef?.current.focus()}
               autoComplete="name"
+              value={fullName}
+              onChangeText={setFullName}
             />
           </View>
 
@@ -105,6 +136,8 @@ const SignUp = () => {
               keyboardType="email-address"
               autoComplete="email"
               ref={emailRef}
+              value={email}
+              onChangeText={setEmail}
             />
           </View>
 
@@ -123,6 +156,8 @@ const SignUp = () => {
               secureTextEntry={true}
               ref={psswdRef}
               onSubmitEditing={() => vPsswdRef?.current?.focus()}
+              value={password}
+              onChangeText={setPassword}
             />
           </View>
 
@@ -141,19 +176,36 @@ const SignUp = () => {
               ref={vPsswdRef}
               onSubmitEditing={handleSignUp}
               secureTextEntry={true}
+              value={verifyPassword}
+              onChangeText={setVerifyPassword}
             />
           </View>
 
+          {error && (
+            <View className="w-[85%] justify-center items-center">
+              <Text className="text-red-600  text-left">{error}</Text>
+            </View>
+          )}
+
           <TouchableOpacity
             onPress={handleSignUp}
+            disabled={signingUp}
             activeOpacity={0.7}
             style={{
               padding: hp("1.3%"),
               width: wp("70%"),
             }}
-            className=" bg-blue-400 rounded-full"
+            className={
+              signingUp
+                ? " bg-blue-400/70 rounded-full"
+                : " bg-blue-400 rounded-full"
+            }
           >
-            <Text className="text-white text-center text-lg">Sign Up</Text>
+            {signingUp ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text className="text-white text-center text-lg">Sign Up</Text>
+            )}
           </TouchableOpacity>
 
           <View className="pt-2 flex-row justify-center items-center">

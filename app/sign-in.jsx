@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -16,12 +17,33 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { authScreenImage } from "../constants/images";
+import useAuthStore from "../hooks/firebaseAuthentication";
+import { isValidEmail } from "../utils/helperFunctions";
 
 const SignIn = () => {
   const router = useRouter();
   const psswdRef = useRef();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleLogin = () => {};
+  const { signingIn, signIn } = useAuthStore();
+
+  const handleLogin = async () => {
+    setError(null);
+
+    if (!password || !email.trim()) {
+      setError("All fields are required.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    const res = await signIn(email, password);
+    if (res) setError(res);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -36,6 +58,7 @@ const SignIn = () => {
           backgroundColor: "#60a5fa",
         }}
         contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}
+        bounces={false}
       >
         <StatusBar value="auto" />
         <Image
@@ -84,6 +107,8 @@ const SignIn = () => {
               onSubmitEditing={() => psswdRef?.current.focus()}
               autoComplete="email"
               keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
             />
           </View>
 
@@ -103,19 +128,36 @@ const SignIn = () => {
               onSubmitEditing={handleLogin}
               secureTextEntry={true}
               autoComplete="current-password"
+              value={password}
+              onChangeText={setPassword}
             />
           </View>
+
+          {error && (
+            <View className="w-[85%] justify-center items-center">
+              <Text className="text-red-600  text-left">{error}</Text>
+            </View>
+          )}
 
           <TouchableOpacity
             onPress={handleLogin}
             activeOpacity={0.7}
+            disabled={signingIn}
             style={{
               padding: hp("1.3%"),
               width: wp("70%"),
             }}
-            className=" bg-blue-400 rounded-full"
+            className={
+              signingIn
+                ? " bg-blue-400/70 rounded-full"
+                : " bg-blue-400 rounded-full"
+            }
           >
-            <Text className="text-white text-center text-lg">Login</Text>
+            {signingIn ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text className="text-white text-center text-lg">Login</Text>
+            )}
           </TouchableOpacity>
 
           <View className="pt-2 flex-row justify-center items-center">

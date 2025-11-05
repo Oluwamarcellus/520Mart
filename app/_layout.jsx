@@ -5,7 +5,7 @@ import "../global.css";
 import useAuthStore from "../hooks/firebaseAuthentication";
 
 export default function Layout() {
-  const { initAuth, loading } = useAuthStore();
+  const { initAuth, loading, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     initAuth();
@@ -26,10 +26,15 @@ export default function Layout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="index"></Stack.Screen>
-      <Stack.Screen name="(tabs)"></Stack.Screen>
-      <Stack.Screen name="sign-in"></Stack.Screen>
-      <Stack.Screen name="sign-up"></Stack.Screen>
+      <Stack.Protected guard={isAuthenticated === true}>
+        <Stack.Screen name="(tabs)"></Stack.Screen>
+      </Stack.Protected>
+
+      <Stack.Protected guard={isAuthenticated === false}>
+        <Stack.Screen name="index"></Stack.Screen>
+        <Stack.Screen name="sign-in"></Stack.Screen>
+        <Stack.Screen name="sign-up"></Stack.Screen>
+      </Stack.Protected>
     </Stack>
   );
 }
