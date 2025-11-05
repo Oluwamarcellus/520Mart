@@ -1,7 +1,25 @@
 import { Stack } from "expo-router";
+import { useEffect } from "react";
+import { ActivityIndicator } from "react-native";
 import "../global.css";
+import useAuthStore from "../hooks/firebaseAuthentication";
 
 export default function Layout() {
+  const { initAuth, loading } = useAuthStore();
+
+  useEffect(() => {
+    initAuth();
+  }, []);
+
+  if (loading)
+    return (
+      <ActivityIndicator
+        size="large"
+        color="white"
+        className="flex-1 bg-blue-400 items-center justify-center"
+      />
+    );
+
   return (
     <Stack
       screenOptions={{
