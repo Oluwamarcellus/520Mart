@@ -18,6 +18,7 @@ import {
 } from "react-native-responsive-screen";
 import { authScreenImage } from "../constants/images";
 import useAuthStore from "../hooks/firebaseAuthentication";
+import useUserStore from "../hooks/userStore";
 import { isValidEmail } from "../utils/helperFunctions";
 
 const SignIn = () => {
@@ -28,6 +29,7 @@ const SignIn = () => {
   const [error, setError] = useState(null);
 
   const { signingIn, signIn } = useAuthStore();
+  const { fetchUser } = useUserStore();
 
   const handleLogin = async () => {
     setError(null);
@@ -41,8 +43,12 @@ const SignIn = () => {
       return;
     }
 
+    // Authenticate User
     const res = await signIn(email, password);
-    if (res) setError(res);
+    if (res.status === "failed") return setError(res.errorMessage);
+
+    // Fetch User from database and save user to store
+    await fetchUser(res.usr.uid);
   };
 
   return (

@@ -19,7 +19,10 @@ import {
 import { ActivityIndicator } from "react-native";
 import { authScreenImage } from "../constants/images";
 import useAuthStore from "../hooks/firebaseAuthentication";
+import useUserStore from "../hooks/userStore";
 import { isValidEmail, isValidPassword } from "../utils/helperFunctions";
+
+import { serverTimestamp } from "firebase/firestore";
 
 const SignUp = () => {
   const [fullName, setFullName] = useState("");
@@ -30,6 +33,7 @@ const SignUp = () => {
 
   const router = useRouter();
   const { signingUp, signUp } = useAuthStore();
+  const { registerUser } = useUserStore();
 
   const emailRef = useRef();
   const psswdRef = useRef();
@@ -50,8 +54,21 @@ const SignUp = () => {
     const passwordError = isValidPassword(password, verifyPassword);
     if (passwordError) return setError(passwordError);
 
+    //  Authenticate User
     const res = await signUp(fullName.trim(), email.trim(), password);
-    if (res) setError(res);
+    if (res.status === "failed") return setError(res.errorMessage);
+
+    // Add user to the database and save user to store
+    const user = {
+      full_name: fullName.trim(),
+      email,
+      uid: res.usr.uid,
+      created_at: serverTimestamp(),
+      profile_image: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        fullName.trim()
+      )}&background=random&color=fff`,
+    };
+    await registerUser(user);
   };
 
   return (

@@ -31,7 +31,11 @@ const useAuthStore = create((set, get) => ({
   signIn: async (email, password) => {
     try {
       set({ error: null, signingIn: true });
-      await signInWithEmailAndPassword(auth, email, password);
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      return {
+        status: "success",
+        usr: res.user,
+      };
     } catch (error) {
       console.error(error.code);
       let errorMessage = "Error Signing In";
@@ -45,7 +49,10 @@ const useAuthStore = create((set, get) => ({
       if (error.code.includes("auth/invalid-credential")) {
         errorMessage = "Invalid login credentials";
       }
-      return errorMessage;
+      return {
+        status: "failed",
+        errorMessage,
+      };
     } finally {
       set({ signingIn: false });
     }
@@ -54,7 +61,11 @@ const useAuthStore = create((set, get) => ({
   signUp: async (name, email, password) => {
     try {
       set({ signUpError: null, signingUp: true });
-      await createUserWithEmailAndPassword(auth, email, password);
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      return {
+        status: "success",
+        usr: res.user,
+      };
     } catch (error) {
       console.error(error.code);
       let errorMessage = "Error Signing Up";
@@ -68,7 +79,10 @@ const useAuthStore = create((set, get) => ({
       if (error.code.includes("auth/invalid-email")) {
         errorMessage = "Please enter a valid email address";
       }
-      return errorMessage;
+      return {
+        status: "failed",
+        errorMessage,
+      };
     } finally {
       set({ signingUp: false });
     }
