@@ -25,7 +25,6 @@ const GetStarted = () => {
       contentContainerStyle={{ alignItems: "center" }}
       bounces={false}
     >
-      <StatusBar value="auto" />
       <Image
         source={getStartedScreenImage}
         style={{

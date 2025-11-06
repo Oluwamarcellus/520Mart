@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, StatusBar } from "react-native";
 import "../global.css";
 import useAuthStore from "../hooks/firebaseAuthentication";
 
@@ -26,6 +26,7 @@ export default function Layout() {
         headerShown: false,
       }}
     >
+      <StatusBar value="auto" />
       <Stack.Protected guard={isAuthenticated === true}>
         <Stack.Screen name="(tabs)"></Stack.Screen>
       </Stack.Protected>

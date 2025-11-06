@@ -6,6 +6,9 @@ import {
 } from "firebase/auth";
 import { create } from "zustand";
 import { auth } from "../config/firebase.config";
+import useUserStore from "./userStore";
+
+const { fetchUser } = useUserStore.getState();
 
 const useAuthStore = create((set, get) => ({
   user: null,
@@ -21,6 +24,7 @@ const useAuthStore = create((set, get) => ({
     try {
       onAuthStateChanged(auth, (usr) => {
         set({ user: usr || null, isAuthenticated: !!usr, loading: false });
+        if (usr) fetchUser(usr.uid);
       });
     } catch (error) {
       console.error(error.message);
