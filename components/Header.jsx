@@ -7,7 +7,7 @@ const Header = ({ user }) => {
   const inputRef = useRef();
 
   return (
-    <View className="pt-2">
+    <View className="py-2">
       <View className="flex-row items-center gap-2">
         <View>
           <Image
