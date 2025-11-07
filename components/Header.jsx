@@ -20,6 +20,7 @@ const Header = ({ user }) => {
           <Text
             style={{
               fontSize: wp("4.5%"),
+              color: "gray",
             }}
             className="font-light"
           >
