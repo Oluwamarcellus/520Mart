@@ -3,6 +3,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Text,
   TextInput,
@@ -55,8 +56,8 @@ const addPost = () => {
       const data = new FormData();
       data.append("file", {
         uri: imageFile.uri,
-        type: "image/jpeg",
-        name: "upload.jpg",
+        type: imageFile.type,
+        name: imageFile.name,
       });
       data.append(
         "upload_preset",
@@ -99,12 +100,15 @@ const addPost = () => {
     }
 
     try {
-      setError(false);
+      setError(null);
       setPostIsUploading(true);
       setImageIsUploading(true);
       const url = await uploadImageForURL();
 
-      if (!url) return setError("Image upload failed");
+      if (!url) {
+        setPostIsUploading(false);
+        return setError("Image upload failed");
+      }
 
       // Save Post to Firestore
       const postData = {
@@ -120,13 +124,20 @@ const addPost = () => {
 
       const postRef = collection(db, "posts");
       await addDoc(postRef, postData);
+      Alert.alert("Success", "Post uploaded successfully");
+      setTitle("");
+      setDescription("");
+      setPrice(null);
+      setAddress("");
+      setSelected(null);
+      setImageFile(null);
+
       console.log("Post Uploaded Successfully");
     } catch (error) {
       console.log(error);
       setError("Post upload failed");
     } finally {
       setPostIsUploading(false);
-      setImageIsUploading(false);
     }
   };
 
