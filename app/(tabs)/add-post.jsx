@@ -1,6 +1,14 @@
 import * as ImagePicker from "expo-image-picker";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   heightPercentageToDP as hp,
@@ -9,6 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import CustomSelect from "../../components/CategoryItemsModal";
+import { db } from "../../config/firebase.config";
 
 const addPost = () => {
   const [title, setTitle] = useState("");
@@ -18,34 +27,64 @@ const addPost = () => {
   const [selected, setSelected] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState(null);
+  const [imageIsUploading, setImageIsUploading] = useState(false);
+  const [postIsUploading, setPostIsUploading] = useState(false);
 
   // Selecting Image from the device
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImageFile(result.assets[0]);
-      console.log(imageFile);
+      const imageData = result.assets[0];
+      setImageFile({
+        uri: imageData.uri,
+        name: `image_${Date.now()}.jpg`,
+        type: imageData.mimeType,
+      });
+    }
+  };
+
+  // Uploads a local media to Cloudinary and returns the url
+  const uploadImageForURL = async () => {
+    try {
+      const data = new FormData();
+      data.append("file", {
+        uri: imageFile.uri,
+        type: "image/jpeg",
+        name: "upload.jpg",
+      });
+      data.append(
+        "upload_preset",
+        process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+      );
+      data.append("cloud_name", process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME);
+
+      const upload = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const json = await upload.json();
+      return json.url;
+    } catch (error) {
+      console.error("Upload Failed", error);
+      return null;
+    } finally {
+      setImageIsUploading(false);
     }
   };
 
   const handleAddPost = async () => {
     // Check if all fields are filled correclty
-    setError(false);
-    if (
-      !title.trim() ||
-      !description.trim() ||
-      !price ||
-      !address.trim() ||
-      !imageFile
-    ) {
+
+    if (!title.trim() || !description.trim() || !price || !address.trim()) {
       setError("All fields are required!");
       return;
     } else if (price <= 0) {
@@ -54,6 +93,40 @@ const addPost = () => {
     } else if (!selected) {
       setError("Select a category!");
       return;
+    } else if (!imageFile) {
+      setError("Upload an Image");
+      return;
+    }
+
+    try {
+      setError(false);
+      setPostIsUploading(true);
+      setImageIsUploading(true);
+      const url = await uploadImageForURL();
+
+      if (!url) return setError("Image upload failed");
+
+      // Save Post to Firestore
+      const postData = {
+        title: title.trim(),
+        description: description.trim(),
+        price: Number(price),
+        address: address.trim(),
+        photo_url: url,
+        category: selected,
+        created_at: serverTimestamp(),
+      };
+      // console.log(postData);
+
+      const postRef = collection(db, "posts");
+      await addDoc(postRef, postData);
+      console.log("Post Uploaded Successfully");
+    } catch (error) {
+      console.log(error);
+      setError("Post upload failed");
+    } finally {
+      setPostIsUploading(false);
+      setImageIsUploading(false);
     }
   };
 
@@ -88,6 +161,7 @@ const addPost = () => {
         <View className="flex-1  mt-6">
           <TouchableOpacity
             onPress={pickImage}
+            disabled={imageIsUploading || postIsUploading}
             activeOpacity={0.5}
             style={{
               width: wp("22%"),
@@ -98,7 +172,7 @@ const addPost = () => {
             }`}
           >
             {imageFile ? (
-              <View>
+              <View className="flex-1 justify-center items-center relative">
                 <Image
                   source={{ uri: imageFile.uri }}
                   style={{
@@ -108,6 +182,9 @@ const addPost = () => {
                     resizeMode: "cover",
                   }}
                 />
+                <Text className="absolute left-0 right-0 bottom-0 w-full text-center text-sm px-2 bg-blue-50">
+                  {imageIsUploading ? "Uploading..." : "Change Image"}
+                </Text>
               </View>
             ) : (
               <View
@@ -203,24 +280,23 @@ const addPost = () => {
           {/* Post Button */}
           <TouchableOpacity
             activeOpacity={0.7}
+            disabled={postIsUploading}
             onPress={handleAddPost}
             style={{
               padding: hp("1.5%"),
               marginTop: hp("4%"),
             }}
             className={
-              // signingIn
-              //   ? " bg-blue-400/70 rounded-full"
-              //   : " bg-blue-400 rounded-full"
-              " bg-blue-400 rounded-full"
+              postIsUploading
+                ? " bg-blue-400/70 rounded-full"
+                : " bg-blue-400 rounded-full"
             }
           >
-            {/* {signingIn ? (
+            {postIsUploading ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <Text className="text-white text-center text-lg">Login</Text>
-            )} */}
-            <Text className="text-white text-center text-lg">Add Post</Text>
+              <Text className="text-white text-center text-lg">Add Post</Text>
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>

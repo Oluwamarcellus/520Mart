@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Keyboard,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -22,7 +29,10 @@ export default function CustomSelect({ selected, setSelected }) {
       {/* Select Box */}
       <TouchableOpacity
         className="flex-row justify-between items-center bg-blue-50 mt-2 rounded-2xl px-4 py-4 border-2 border-blue-200"
-        onPress={() => setOpen(true)}
+        onPress={() => {
+          setOpen(true);
+          Keyboard.dismiss();
+        }}
       >
         <Text
           className=" "
