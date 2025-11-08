@@ -12,19 +12,19 @@ const Categories = ({ categoryItems }) => {
       numColumns={4}
       columnWrapperStyle={{
         justifyContent: "space-between",
+        marginBottom: 8,
         gap: 8,
       }}
-      contentContainerStyle={{ gap: 8 }}
+      contentContainerStyle={{ flexGrow: 1, gap: 8 }}
       ListHeaderComponent={() => (
         <Text
           style={{
             fontSize: wp("5.2%"),
             marginTop: 5,
           }}
-          className=" font-medium"
+          className="mb-2 font-medium"
         >
-          {" "}
-          Categories{" "}
+          Categories
         </Text>
       )}
     />

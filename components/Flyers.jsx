@@ -9,7 +9,7 @@ const Flyers = ({ flyerItems }) => {
       renderItem={({ item, index }) => (
         <FlyerCard data={item} isLastCard={index === flyerItems.length - 1} />
       )}
-      keyExtractor={(item) => item.name}
+      keyExtractor={(item) => item}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ marginVertical: 10 }}
