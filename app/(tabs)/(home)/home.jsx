@@ -1,8 +1,8 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import Header from "../../components/Header";
-import LatestItems from "../../components/LatestItems";
+import Header from "../../../components/Header";
+import LatestItems from "../../../components/LatestItems";
 // import { categoryMenus, flyers } from "../../constants/images";
-import useUserStore from "../../hooks/userStore";
+import useUserStore from "../../../hooks/userStore";
 
 const Home = () => {
   const { userProfile } = useUserStore();

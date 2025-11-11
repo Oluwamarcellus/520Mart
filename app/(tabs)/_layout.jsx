@@ -30,7 +30,7 @@ export default function Layout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="(home)"
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ size, color, focused }) => (
@@ -44,7 +44,7 @@ export default function Layout() {
       />
 
       <Tabs.Screen
-        name="explore"
+        name="(explore)"
         title="Explore"
         options={{
           tabBarLabel: "Explore",
