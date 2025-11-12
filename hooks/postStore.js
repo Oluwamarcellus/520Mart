@@ -5,6 +5,7 @@ import {
   orderBy,
   query,
   startAfter,
+  where,
 } from "firebase/firestore";
 import { create } from "zustand";
 import { db } from "../config/firebase.config";
@@ -13,7 +14,11 @@ const usePostStore = create((set, get) => ({
   isFetching: false,
   refreshing: false,
   setRefreshing: (value) => set({ refreshing: value }),
-  fetchPost: async (numberOfPost = null) => {
+  fetchPost: async ({
+    numberOfPost = null,
+    searchQuery = null,
+    category = null,
+  } = {}) => {
     try {
       set({ isFetching: true });
       const colRef = collection(db, "posts");
@@ -25,7 +30,16 @@ const usePostStore = create((set, get) => ({
       if (numberOfPost) {
         q = query(q, limit(numberOfPost));
       }
-
+      if (searchQuery) {
+        q = query(
+          q,
+          where("title_lowercase", ">=", searchQuery),
+          where("title_lowercase", "<", searchQuery + "\uf8ff")
+        );
+      }
+      if (category) {
+        q = query(q, where("category", "==", category));
+      }
       const res = await getDocs(q);
       const posts = res.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };

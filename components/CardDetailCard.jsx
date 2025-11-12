@@ -55,7 +55,7 @@ const card_detail = ({ item }) => {
               }}
               className="text-black/50 mt-1"
             >
-              {item.description} {item.description} {item.description}
+              {item.description}
             </Text>
           </View>
         </View>
@@ -63,51 +63,53 @@ const card_detail = ({ item }) => {
 
       {/* Poster Info */}
       <View
-        style={{ marginBottom: tabBarHeight + hp("2.5%") }}
-        className="w-full mt-4 bg-blue-200 px-4 py-6"
+        style={{ marginBottom: tabBarHeight + hp("3%") }}
+        className="mt-4 px-6"
       >
-        <View className="flex-row gap-4 items-center">
-          <Image
-            source={{ uri: item.photo_url }}
-            style={{
-              height: wp("12%"),
-              width: wp("12%"),
-              resizeMode: "cover",
-              borderRadius: 100,
-            }}
-          />
-          <View className="">
-            <Text
+        <View className="w-full bg-blue-200 px-4 py-6 rounded-2xl">
+          <View className="flex-row gap-4 items-center">
+            <Image
+              source={{ uri: item.photo_url }}
               style={{
-                fontSize: wp("4.5%"),
-                fontWeight: 500,
+                height: wp("12%"),
+                width: wp("12%"),
+                resizeMode: "cover",
+                borderRadius: 100,
               }}
-            >
-              Yowale 520
-            </Text>
-            <Text
-              style={{
-                fontSize: wp("3.8%"),
-              }}
-              className="text-black/50"
-            >
-              joboy@gmail.com
-            </Text>
+            />
+            <View className="">
+              <Text
+                style={{
+                  fontSize: wp("4.5%"),
+                  fontWeight: 500,
+                }}
+              >
+                Yowale 520
+              </Text>
+              <Text
+                style={{
+                  fontSize: wp("3.8%"),
+                }}
+                className="text-black/50"
+              >
+                joboy@gmail.com
+              </Text>
+            </View>
           </View>
+          <TouchableOpacity className="items-center mt-2">
+            <View className="bg-blue-400 p-4 rounded-2xl ">
+              <Text
+                style={{
+                  fontSize: wp("4%"),
+                  fontWeight: 500,
+                }}
+                className="text-white"
+              >
+                Send Message
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity className="items-center mt-2">
-          <View className="bg-blue-400 p-4 rounded-2xl ">
-            <Text
-              style={{
-                fontSize: wp("4%"),
-                fontWeight: 500,
-              }}
-              className="text-white"
-            >
-              Send Message
-            </Text>
-          </View>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );

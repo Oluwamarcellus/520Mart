@@ -20,14 +20,14 @@ const LatestItems = () => {
 
   // Fetche posts from db and save it to state
   const populateData = async () => {
-    const { posts } = await fetchPost(POST_LIMIT);
+    const { posts } = await fetchPost({ numberOfPost: POST_LIMIT });
     setPostData(posts);
   };
 
   // Handles pull down to refresh
   const handleRefresh = async () => {
     setRefreshing(true);
-    const { posts, lastDoc } = await fetchPost();
+    const { posts, lastDoc } = await fetchPost({ numberOfPost: POST_LIMIT });
     setPostData(posts);
     // setLastPost(lastDoc);
   };
@@ -35,7 +35,9 @@ const LatestItems = () => {
   return (
     <FlatList
       data={postData}
-      renderItem={({ item }) => <ItemsCard item={item} />}
+      renderItem={({ item }) => (
+        <ItemsCard item={item} currentScreen={"(home)"} />
+      )}
       keyExtractor={(item) => String(item.title)}
       numColumns={2}
       showsVerticalScrollIndicator={false}

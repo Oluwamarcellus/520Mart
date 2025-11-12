@@ -14,7 +14,7 @@ const _layout = () => {
       />
       <Stack.Screen
         name="card_detail"
-        options={{
+        options={({ navigation }) => ({
           headerStyle: {
             backgroundColor: "#60a5fa",
           },
@@ -22,7 +22,7 @@ const _layout = () => {
           headerLeft: () => {
             return (
               <View className="flex-row justify-center items-center gap-4">
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                   <Ionicons name="arrow-back" size={22} color="white" />
                 </TouchableOpacity>
                 <Text style={{ color: "white", fontSize: wp("5%") }}>
@@ -38,7 +38,28 @@ const _layout = () => {
               </TouchableOpacity>
             );
           },
-        }}
+        })}
+      />
+      <Stack.Screen
+        name="category"
+        options={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: "#60a5fa",
+          },
+          headerTitle: "",
+          headerLeft: () => {
+            return (
+              <View className="flex-row justify-center items-center gap-4">
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Ionicons name="arrow-back" size={22} color="white" />
+                </TouchableOpacity>
+                <Text style={{ color: "white", fontSize: wp("5%") }}>
+                  Item Info
+                </Text>
+              </View>
+            );
+          },
+        })}
       />
     </Stack>
   );

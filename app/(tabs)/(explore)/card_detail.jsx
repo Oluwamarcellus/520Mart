@@ -1,12 +1,13 @@
 import { useLocalSearchParams } from "expo-router";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import CardDetailCard from "../../../components/CardDetailCard";
 
 const card_detail = () => {
   const params = useLocalSearchParams();
-
+  const cardInfo = JSON.parse(params.item);
   return (
-    <View>
-      <Text>{params.item.title}</Text>
+    <View className="flex-1 ">
+      <CardDetailCard item={cardInfo} />
     </View>
   );
 };

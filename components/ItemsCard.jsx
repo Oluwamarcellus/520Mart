@@ -2,13 +2,14 @@ import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
-const ItemsCard = ({ item }) => {
+const ItemsCard = ({ item, currentScreen }) => {
   const router = useRouter();
+
   return (
     <TouchableOpacity
       onPress={() =>
         router.push({
-          pathname: "/card_detail",
+          pathname: `/(tabs)/${currentScreen}/card_detail`,
           params: { item: JSON.stringify(item) },
         })
       }

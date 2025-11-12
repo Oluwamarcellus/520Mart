@@ -10,6 +10,7 @@ export default function Layout() {
   const { width } = Dimensions.get("window");
   return (
     <Tabs
+      initialRouteName="(home)"
       screenOptions={{
         headerShown: false,
         tabBarLabelStyle: { fontSize: wp("2.8%"), marginTop: "2%" },

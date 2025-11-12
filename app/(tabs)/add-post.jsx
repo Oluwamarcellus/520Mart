@@ -19,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import CustomSelect from "../../components/CategoryItemsModal";
 import { db } from "../../config/firebase.config";
+import useUserStore from "../../hooks/userStore";
 
 const addPost = () => {
   const [title, setTitle] = useState("");
@@ -30,6 +31,7 @@ const addPost = () => {
   const [error, setError] = useState(null);
   const [imageIsUploading, setImageIsUploading] = useState(false);
   const [postIsUploading, setPostIsUploading] = useState(false);
+  const { userProfile } = useUserStore();
 
   // Selecting Image from the device
   const pickImage = async () => {
@@ -113,12 +115,17 @@ const addPost = () => {
       // Save Post to Firestore
       const postData = {
         title: title.trim(),
+        title_lowercase: title.trim().toLowerCase(),
         description: description.trim(),
         price: Number(price),
         address: address.trim(),
         photo_url: url,
         category: selected,
         created_at: serverTimestamp(),
+        poster_id: userProfile.uid,
+        poster_email: userProfile.email,
+        poster_photo: userProfile.profile_image,
+        poster_name: userProfile.full_name,
       };
       // console.log(postData);
 

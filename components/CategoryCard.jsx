@@ -1,9 +1,17 @@
+import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const CategoryCard = ({ categoryItem }) => {
+  const router = useRouter();
   return (
     <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/category",
+          params: { category: categoryItem.name },
+        })
+      }
       activeOpacity={0.4}
       style={{
         flex: 1,

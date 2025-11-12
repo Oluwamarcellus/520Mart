@@ -104,7 +104,9 @@ const explore = () => {
       ) : (
         <FlatList
           data={postData}
-          renderItem={({ item }) => <ItemsCard item={item} />}
+          renderItem={({ item }) => (
+            <ItemsCard item={item} currentScreen={"(explore)"} />
+          )}
           numColumns={2}
           keyExtractor={(item) => String(item.id)}
           showsVerticalScrollIndicator={false}
