@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -9,40 +10,53 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import ItemsCard from "../../../components/ItemsCard";
 import usePostStore from "../../../hooks/postStore";
 
 const explore = () => {
   const [postData, setPostData] = useState([]);
+  const [exploreQuery, setExploreQuery] = useState([]);
   // const [canLoadMore, setCanLoadMore] = useState(true);
   // const [loadingMore, setLoadingMore] = useState(false);
   // const [lastPost, setLastPost] = useState(null);
-
   const inputRef = useRef();
   const tabBarHeight = useBottomTabBarHeight();
   const { isFetching, fetchMore, fetchPost, refreshing, setRefreshing } =
     usePostStore();
+  const params = useLocalSearchParams();
 
   // Fetch DATA on entry
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (params?.search) setExploreQuery(params.search);
     populateData();
-  }, []);
+  }, [params?.search]);
 
   // Post Display Limit control
   const POST_LIMIT = 6;
 
   // Fetche posts from db and save it to state
-  const populateData = async () => {
-    const { posts, lastDoc } = await fetchPost();
+  const populateData = async ({ exploreSearch = false } = {}) => {
+    const { posts, lastDoc } = await fetchPost({
+      searchQuery: exploreSearch
+        ? exploreQuery
+        : params?.search.toLowerCase() || null,
+    });
     setPostData(posts);
+    console.log(posts);
+
     // setLastPost(lastDoc);
   };
 
   // Handles pull down to refresh
   const handleRefresh = async () => {
     setRefreshing(true);
+    setExploreQuery("");
     const { posts, lastDoc } = await fetchPost();
     setPostData(posts);
     // setLastPost(lastDoc);
@@ -91,6 +105,10 @@ const explore = () => {
             placeholderTextColor={"gray"}
             className="text-black/70"
             ref={inputRef}
+            returnKeyType="search"
+            value={exploreQuery}
+            onChangeText={setExploreQuery}
+            onSubmitEditing={() => populateData({ exploreSearch: true })}
           />
         </View>
       </View>
@@ -131,6 +149,30 @@ const explore = () => {
           //     </Text>
           //   ) : null
           // }
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  height: hp("70%"),
+                }}
+                className="flex-1 justify-center items-center"
+              >
+                <MaterialIcons
+                  name="format-list-bulleted-add"
+                  color="#81b7f8ff"
+                  size={60}
+                />
+                <Text className="text-lg mt-2 text-blue-400">
+                  No item matched your search
+                </Text>
+                <TouchableOpacity onPress={() => handleRefresh()}>
+                  <Text className="text-white bg-blue-400 py-2 px-4 mt-1 rounded-2xl">
+                    Browse all
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
         />
       )}
     </SafeAreaView>

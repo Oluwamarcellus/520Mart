@@ -1,10 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRef } from "react";
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const Header = ({ user }) => {
+  const [searchQuery, setSearchQuery] = useState();
   const inputRef = useRef();
+  const router = useRouter();
+
+  const handleSearch = () => {
+    router.push({
+      pathname: "/(explore)/explore",
+      params: {
+        search: searchQuery.trim(),
+      },
+    });
+  };
 
   return (
     <View className="py-2">
@@ -47,6 +59,9 @@ const Header = ({ user }) => {
           placeholderTextColor={"gray"}
           className="text-black/70"
           ref={inputRef}
+          returnKeyType="search"
+          onChangeText={setSearchQuery}
+          onSubmitEditing={handleSearch}
         />
       </View>
     </View>

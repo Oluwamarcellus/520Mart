@@ -30,15 +30,16 @@ const usePostStore = create((set, get) => ({
       if (numberOfPost) {
         q = query(q, limit(numberOfPost));
       }
+      if (category) {
+        q = query(q, where("category", "==", category));
+      }
+
       if (searchQuery) {
         q = query(
-          q,
+          colRef,
           where("title_lowercase", ">=", searchQuery),
           where("title_lowercase", "<", searchQuery + "\uf8ff")
         );
-      }
-      if (category) {
-        q = query(q, where("category", "==", category));
       }
       const res = await getDocs(q);
       const posts = res.docs.map((doc) => {
