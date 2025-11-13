@@ -4,9 +4,12 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import useUserStore from "../hooks/userStore";
 
 const card_detail = ({ item }) => {
   const tabBarHeight = useBottomTabBarHeight();
+  const { userProfile } = useUserStore();
+
   return (
     <ScrollView className="flex-1">
       <View className="flex-1">
@@ -96,19 +99,37 @@ const card_detail = ({ item }) => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity className="items-center mt-2">
-            <View className="bg-blue-400 p-4 rounded-2xl ">
-              <Text
-                style={{
-                  fontSize: wp("4%"),
-                  fontWeight: 500,
-                }}
-                className="text-white"
-              >
-                Send Message
-              </Text>
-            </View>
-          </TouchableOpacity>
+
+          {/* Verify it is the poster to decide action */}
+          {userProfile.uid === item.poster_id ? (
+            <TouchableOpacity className="items-center mt-2">
+              <View className="bg-red-500 p-4 rounded-2xl ">
+                <Text
+                  style={{
+                    fontSize: wp("4%"),
+                    fontWeight: 500,
+                  }}
+                  className="text-white"
+                >
+                  Remove Listing
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity className="items-center mt-2">
+              <View className="bg-blue-400 p-4 rounded-2xl ">
+                <Text
+                  style={{
+                    fontSize: wp("4%"),
+                    fontWeight: 500,
+                  }}
+                  className="text-white"
+                >
+                  Send Message
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScrollView>

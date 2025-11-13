@@ -75,7 +75,7 @@ export default function Layout() {
       />
 
       <Tabs.Screen
-        name="profile"
+        name="(profile)"
         title="Profile"
         options={{
           tabBarLabel: "Profile",

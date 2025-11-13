@@ -25,7 +25,7 @@ export const profileMenus = [
   },
   { name: "Explore", uri: require("../assets/profile-menus/explore.jpg") },
   { name: "Online", uri: require("../assets/profile-menus/online.jpg") },
-  { name: "Exit", uri: require("../assets/profile-menus/exit.jpg") },
+  { name: "Sign out", uri: require("../assets/profile-menus/exit.jpg") },
 ];
 
 export const flyers = [

@@ -45,10 +45,9 @@ const explore = () => {
     const { posts, lastDoc } = await fetchPost({
       searchQuery: exploreSearch
         ? exploreQuery
-        : params?.search.toLowerCase() || null,
+        : params?.search?.toLowerCase() || null,
     });
     setPostData(posts);
-    console.log(posts);
 
     // setLastPost(lastDoc);
   };

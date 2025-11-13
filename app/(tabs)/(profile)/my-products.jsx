@@ -1,34 +1,34 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import EmptyList from "../../../components/EmptyList";
 import ItemsCard from "../../../components/ItemsCard";
 import usePostStore from "../../../hooks/postStore";
+import useUserStore from "../../../hooks/userStore";
 
-const category = () => {
-  const [categoryItems, setCategoryItems] = useState(null);
-  const params = useLocalSearchParams();
+const my_products = () => {
+  const [myProducts, setMyProducts] = useState(null);
   const { refreshing, setRefreshing, fetchPost } = usePostStore();
   const tabBarHeight = useBottomTabBarHeight();
+  const userProfile = useUserStore((state) => state.userProfile);
 
   useEffect(() => {
     populateData();
   }, []);
 
   const populateData = async () => {
-    const { posts, lastDoc } = await fetchPost({ category: params?.category });
-    setCategoryItems(posts);
+    const { posts, lastDoc } = await fetchPost({ posterId: userProfile?.uid });
+    setMyProducts(posts);
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    const { posts, lastDoc } = await fetchPost({ category: params?.category });
-    setCategoryItems(posts);
+    const { posts, lastDoc } = await fetchPost({ posterId: userProfile?.uid });
+    setMyProducts(posts);
     // setLastPost(lastDoc);
   };
 
-  if (!categoryItems)
+  if (!myProducts)
     return (
       <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="small" color="#3ba8f6ff" />
@@ -38,9 +38,9 @@ const category = () => {
   return (
     <View className="flex-1 px-6 py-2">
       <FlatList
-        data={categoryItems}
+        data={myProducts}
         renderItem={({ item }) => (
-          <ItemsCard item={item} currentScreen={"(home)"} />
+          <ItemsCard item={item} currentScreen={"(profile)"} />
         )}
         numColumns={2}
         keyExtractor={(item) => String(item.id)}
@@ -61,4 +61,4 @@ const category = () => {
   );
 };
 
-export default category;
+export default my_products;

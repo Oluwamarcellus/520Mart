@@ -18,6 +18,7 @@ const usePostStore = create((set, get) => ({
     numberOfPost = null,
     searchQuery = null,
     category = null,
+    posterId = null,
   } = {}) => {
     try {
       set({ isFetching: true });
@@ -34,6 +35,9 @@ const usePostStore = create((set, get) => ({
         q = query(q, where("category", "==", category));
       }
 
+      if (posterId) {
+        q = query(q, where("poster_id", "==", posterId));
+      }
       if (searchQuery) {
         q = query(
           colRef,
