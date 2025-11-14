@@ -31,13 +31,6 @@ const _layout = () => {
               </View>
             );
           },
-          headerRight: () => {
-            return (
-              <TouchableOpacity>
-                <Ionicons name="share-social" size={23} color="white" />
-              </TouchableOpacity>
-            );
-          },
         })}
       />
     </Stack>
