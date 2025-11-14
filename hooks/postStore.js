@@ -1,5 +1,8 @@
 import {
   collection,
+  deleteDoc,
+  doc,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -87,6 +90,30 @@ const usePostStore = create((set, get) => ({
       console.error(error);
     } finally {
       set({ isFetching: false });
+    }
+  },
+  deletePost: async (postId, posterId) => {
+    try {
+      if (!postId || !posterId)
+        throw new Error("Post Id and Poster Id are required");
+
+      const docRef = doc(db, "posts", postId);
+      const snapshot = await getDoc(docRef);
+
+      // Chexks if post exists
+      if (!snapshot.exists())
+        throw new Error("Post not found or does not exist");
+
+      // Compares posterId with the post's posterId
+      if (posterId !== snapshot.data().poster_id)
+        throw new Error("You are not authorized to delete this post");
+
+      // Deletes post if all checks are passed
+      await deleteDoc(docRef);
+      return true;
+    } catch (error) {
+      console.error("Error deleting post", error);
+      throw error;
     }
   },
 }));

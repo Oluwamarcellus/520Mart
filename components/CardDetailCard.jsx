@@ -1,14 +1,86 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Linking,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import usePostStore from "../hooks/postStore";
 import useUserStore from "../hooks/userStore";
 
 const card_detail = ({ item }) => {
   const tabBarHeight = useBottomTabBarHeight();
   const { userProfile } = useUserStore();
+  const deletePost = usePostStore((state) => state.deletePost);
+  const [deleting, setDeleting] = useState(false);
+  const router = useRouter();
+
+  // Function that handkes posts delete
+  const handleDelete = (postId, posterId) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this post?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            setDeleting(true);
+            try {
+              await deletePost(postId, posterId);
+              router.back();
+            } catch (error) {
+              console.error("Deleting post Error:", error);
+            } finally {
+              setDeleting(false);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  // Funtion that handles email message to a poster
+  const sendMessage = async (posterEmail, productName) => {
+    try {
+      if (!posterEmail)
+        return Alert.alert("", "No email account found for this seller.");
+
+      const subject = `Inquiry about ${productName}`;
+      const body = `Hi,\n\nIs your ${productName} still available?\n\nAlso, are you open to negotiation?\n\nLooking forward to your reply.\n\nThank you!`;
+
+      const emailUrl = `mailto:${posterEmail}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+
+      // Check if device can open the email app
+      const canOpen = await Linking.canOpenURL(emailUrl);
+      if (!canOpen)
+        return Alert.alert(
+          "",
+          "Your device does not have an email app installed or enabled."
+        );
+
+      await Linking.openURL(emailUrl);
+    } catch (error) {
+      console.error("Error sending email", error);
+    }
+  };
 
   return (
     <ScrollView className="flex-1">
@@ -102,28 +174,45 @@ const card_detail = ({ item }) => {
 
           {/* Verify it is the poster to decide action */}
           {userProfile.uid === item.poster_id ? (
-            <TouchableOpacity className="items-center mt-2">
-              <View className="bg-red-500 p-4 rounded-2xl ">
-                <Text
-                  style={{
-                    fontSize: wp("4%"),
-                    fontWeight: 500,
-                  }}
-                  className="text-white"
+            <View>
+              <TouchableOpacity
+                className="items-center mt-2"
+                onPress={() => handleDelete(item.id, userProfile.uid)}
+                disabled={deleting}
+              >
+                <View
+                  className={`${
+                    deleting && "opacity-70"
+                  } bg-red-500 p-4 rounded-2xl w-[40%] items-center`}
                 >
-                  Remove Listing
-                </Text>
-              </View>
-            </TouchableOpacity>
+                  {deleting ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: wp("4%"),
+                        fontWeight: 500,
+                      }}
+                      className="text-white py-1"
+                    >
+                      Remove Listing
+                    </Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
           ) : (
-            <TouchableOpacity className="items-center mt-2">
-              <View className="bg-blue-400 p-4 rounded-2xl ">
+            <TouchableOpacity
+              className="items-center mt-2"
+              onPress={() => sendMessage(item.poster_email || null, item.title)}
+            >
+              <View className="bg-blue-400 p-4 rounded-2xl w-[40%] items-center ">
                 <Text
                   style={{
                     fontSize: wp("4%"),
                     fontWeight: 500,
                   }}
-                  className="text-white"
+                  className="text-white py-1"
                 >
                   Send Message
                 </Text>
