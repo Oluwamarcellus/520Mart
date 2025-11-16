@@ -24,8 +24,9 @@ const CategoryCard = ({ categoryItem }) => {
       <Image
         source={categoryItem.uri}
         style={{
-          width: wp("8%"),
-          height: wp("8%"),
+          width: wp("10%"),
+          height: wp("10%"),
+          resizeMode: "contain",
         }}
       />
       <Text className="text-black/60">{categoryItem.name}</Text>

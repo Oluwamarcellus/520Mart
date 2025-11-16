@@ -23,6 +23,13 @@ export default function Layout() {
           backgroundColor: "#e6e6e6ff",
           borderRadius: 30,
           marginLeft: width * (5 / 100),
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          elevation: 2,
         },
         tabBarItemStyle: {
           paddingTop: "1.5%",

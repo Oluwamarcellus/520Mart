@@ -183,7 +183,7 @@ const card_detail = ({ item }) => {
                 <View
                   className={`${
                     deleting && "opacity-70"
-                  } bg-red-500 p-4 rounded-2xl w-[40%] items-center`}
+                  } bg-red-500 p-4 rounded-2xl min-w-[40%] items-center`}
                 >
                   {deleting ? (
                     <ActivityIndicator size="small" color="white" />
@@ -206,7 +206,7 @@ const card_detail = ({ item }) => {
               className="items-center mt-2"
               onPress={() => sendMessage(item.poster_email || null, item.title)}
             >
-              <View className="bg-blue-400 p-4 rounded-2xl w-[40%] items-center ">
+              <View className="bg-blue-400 p-4 rounded-2xl min-w-[40%] items-center ">
                 <Text
                   style={{
                     fontSize: wp("4%"),

@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,6 +20,7 @@ const profile = () => {
   };
   return (
     <SafeAreaView className="flex-1 mt-10 items-center px-8">
+      <StatusBar style="dark" />
       <View className="justify-center items-center">
         <Image
           source={{
@@ -62,7 +64,6 @@ const profile = () => {
               resizeMode="contain"
               style={{
                 width: wp("10%"),
-                height: wp("10%"),
                 marginBottom: 8,
               }}
             />

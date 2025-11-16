@@ -2,7 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 
 const Header = ({ user }) => {
   const [searchQuery, setSearchQuery] = useState();
@@ -49,9 +52,14 @@ const Header = ({ user }) => {
         </View>
       </View>
 
-      <View className="flex-row bg-blue-50 mt-4 rounded-full px-4 py-3 border-2 border-blue-200 gap-2">
+      <View
+        style={{
+          paddingVertical: hp("1%"),
+        }}
+        className="flex-row items-center bg-blue-50 mt-4 rounded-full px-4 border-2 border-blue-200 gap-2"
+      >
         <TouchableOpacity onPress={() => inputRef.current.focus()}>
-          <Ionicons name="search" size={wp("4%")} color="gray" />
+          <Ionicons name="search" size={20} color="gray" />
         </TouchableOpacity>
         <TextInput
           style={{ flex: 1, fontSize: 18 }}

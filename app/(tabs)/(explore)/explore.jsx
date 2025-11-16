@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -84,6 +85,7 @@ const explore = () => {
 
   return (
     <SafeAreaView className="flex-1 px-6 py-2">
+      <StatusBar style="dark" />
       {/* Header */}
       <View className="pb-2">
         <Text
@@ -94,9 +96,14 @@ const explore = () => {
         >
           Explore More
         </Text>
-        <View className="flex-row bg-blue-50 mt-4 rounded-full px-4 py-3 border-2 border-blue-200 gap-2">
+        <View
+          style={{
+            paddingVertical: hp("1%"),
+          }}
+          className="flex-row items-center bg-blue-50 mt-4 rounded-full px-4 border-2 border-blue-200 gap-2"
+        >
           <TouchableOpacity onPress={() => inputRef.current.focus()}>
-            <Ionicons name="search" size={wp("4%")} color="gray" />
+            <Ionicons name="search" size={20} color="gray" />
           </TouchableOpacity>
           <TextInput
             style={{ flex: 1, fontSize: 18 }}

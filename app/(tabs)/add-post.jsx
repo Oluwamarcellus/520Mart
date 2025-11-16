@@ -1,4 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
+import { StatusBar } from "expo-status-bar";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
@@ -39,7 +40,7 @@ const addPost = () => {
       mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.7,
     });
 
     if (!result.canceled) {
@@ -150,6 +151,7 @@ const addPost = () => {
 
   return (
     <SafeAreaView className="flex-1 px-8 mt-2" edges={["top"]}>
+      <StatusBar style="dark" />
       <View className="gap-1">
         <Text
           style={{
@@ -243,7 +245,11 @@ const addPost = () => {
             className="bg-blue-50 mt-2 rounded-2xl px-4 py-4 border-2 border-blue-200"
           >
             <TextInput
-              style={{ fontSize: wp("4.5%"), flex: 1 }}
+              style={{
+                fontSize: wp("4.5%"),
+                flex: 1,
+                textAlignVertical: "top",
+              }}
               placeholder="Description"
               value={description}
               onChangeText={setDescription}
