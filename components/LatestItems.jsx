@@ -1,4 +1,5 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useIsFocused } from "@react-navigation/native";
 import { useLayoutEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
@@ -13,6 +14,8 @@ const LatestItems = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const POST_LIMIT = 10;
   const { fetchPost, refreshing, setRefreshing } = usePostStore();
+
+  const isFocused = useIsFocused();
 
   useLayoutEffect(() => {
     populateData();
@@ -65,7 +68,7 @@ const LatestItems = () => {
           </Text>
         </View>
       )}
-      refreshing={refreshing}
+      refreshing={isFocused ? refreshing : false}
       onRefresh={handleRefresh}
     />
   );

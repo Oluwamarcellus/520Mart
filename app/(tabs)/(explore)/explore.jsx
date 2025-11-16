@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useIsFocused } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
@@ -31,6 +32,7 @@ const explore = () => {
   const { isFetching, fetchMore, fetchPost, refreshing, setRefreshing } =
     usePostStore();
   const params = useLocalSearchParams();
+  const isFocused = useIsFocused();
 
   // Fetch DATA on entry
   useEffect(() => {
@@ -142,7 +144,7 @@ const explore = () => {
             paddingBottom: tabBarHeight,
             marginTop: 10,
           }}
-          refreshing={refreshing}
+          refreshing={isFocused ? refreshing : false}
           onRefresh={handleRefresh}
           // onEndReached={handleLoadMore}
           // onEndReachedThreshold={0.1}

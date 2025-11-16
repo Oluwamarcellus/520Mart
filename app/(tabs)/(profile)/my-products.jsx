@@ -1,4 +1,5 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import EmptyList from "../../../components/EmptyList";
@@ -11,6 +12,7 @@ const my_products = () => {
   const { refreshing, setRefreshing, fetchPost } = usePostStore();
   const tabBarHeight = useBottomTabBarHeight();
   const userProfile = useUserStore((state) => state.userProfile);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     populateData();
@@ -53,7 +55,7 @@ const my_products = () => {
           paddingBottom: tabBarHeight,
           marginTop: 10,
         }}
-        refreshing={refreshing}
+        refreshing={isFocused ? refreshing : false}
         onRefresh={handleRefresh}
         ListEmptyComponent={() => <EmptyList />}
       />

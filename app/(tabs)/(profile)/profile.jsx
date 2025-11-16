@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { profileMenus } from "../../../constants/images";
 import useAuthStore from "../../../hooks/firebaseAuthentication";
 import useUserStore from "../../../hooks/userStore";
+import { useIsFocused } from "@react-navigation/native";
 
 const profile = () => {
   const { signOut } = useAuthStore();
