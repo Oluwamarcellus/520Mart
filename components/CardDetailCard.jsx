@@ -55,7 +55,7 @@ const card_detail = ({ item }) => {
     );
   };
 
-  // Funtion that handles email message to a poster
+  // Function that handles email message to a poster
   const sendMessage = async (posterEmail, productName) => {
     try {
       if (!posterEmail)
