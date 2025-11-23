@@ -85,14 +85,24 @@ Scan the QR code with Expo Go or pick your emulator.
 
 ---
 
-## Environment Setup
-If you add Firebase or any service later, use an `.env` file like:
+## Environment Setup(in your .env file)
+
+#### Cloudinary configuration
+
+```env
+EXPO_PUBLIC_CLOUDINARY_API_KEY=(your cloudinary api key)
+EXPO_PUBLIC_CLOUDINARY_API_SECRET=(your cloudinary api secret)
+EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME=(your cloud name)
+EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET=(your upload preset)
+```
+
+If you add Firebase or any service later:
 
 ```env
 FIREBASE_API_KEY=yourKeyHere
 FIREBASE_PROJECT_ID=yourProjectId
 ```
-And import them in your config files.
+Import them in your config files.
 
 ---
 
