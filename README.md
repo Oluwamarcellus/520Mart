@@ -25,6 +25,22 @@ It’s built using Expo’s file based routing and Tailwind style utilities. Not
 
 ---
 
+## Screenshots
+<p align="left">
+  
+  <img src="./screenshots/screenshot7.webp" width="70" />
+  <img src="./screenshots/screenshot6.webp" width="70" />
+  <img src="./screenshots/screenshot9.webp" width="70" />
+  <img src="./screenshots/screenshot5.webp" width="70" />
+  <img src="./screenshots/screenshot1.webp" width="70" />
+  <img src="./screenshots/screenshot4.webp" width="70" />
+  <img src="./screenshots/screenshot2.webp" width="70" />
+  <img src="./screenshots/screenshot3.webp" width="70" />
+  <img src="./screenshots/screenshot8.webp" width="70" />
+</p>
+
+
+
 ## Tech Stack
 
 * **Expoo (React Native)**
